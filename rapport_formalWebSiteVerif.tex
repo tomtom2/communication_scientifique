@@ -47,13 +47,15 @@ Il est donc essentiel de mettre en place des méthodes de vérification, afin d'
 
 \chapter*{Définir un site WEB}
 \addcontentsline{toc}{chapter}{Définir un site WEB}
-\section{Les piliers du WEB\\}
+\section*{Les piliers du WEB\\}
+\addcontentsline{toc}{section}{Les piliers du WEB}
 \begin{tabbing}
 1990' $ \Rightarrow$ \=$Hypertext Markup Language$ (HTML)\\
        \>$Hypertext Transfer Protocol$ (HTTP)\\
 \end{tabbing}
 
-\section{Composition d'un site\\}
+\section*{Composition d'un site\\}
+\addcontentsline{toc}{section}{Composition d'un site}
 On peut définir un site comme un ensemble de pages, ou documents, qui sont en fait des fichiers HTML. Ces documents sont reliés entre eux par des liens qu'on peut différencier en trois types:\\
 \begin{itemize}
 \item les liens entre deux documents du site
@@ -61,7 +63,8 @@ On peut définir un site comme un ensemble de pages, ou documents, qui sont en f
 \item les liens vers l extérieur
 \end{itemize}
 
-\section{Un exemple\\}
+\section*{Un exemple\\}
+\addcontentsline{toc}{section}{Exemple}
 Prenons l'exemple simple d'un site hébergé à "monsite.com" et qui possède deux pages a.html et b.html.\\
 La page a est constituée du code html suivant:\\
 \begin{verbatim}
@@ -87,7 +90,8 @@ Dans cet exemple, on a:
 \paragraph*{}
 On a vu précédemment de quoi sont composés les sites web. Il est important à ce stade de modéliser les sites afin d'en retenir les propriétés essentielles et de permettre le traitement automatique de ces derniers. De par la structure du web (ensemble de pages liées entre elles), on devine que l'étude d'un site web pourra être ramenée à une étude de graph. On propose dans ce chapitre de décrire le graphe associé à un site.
 
-\section{ Les nœuds du graphe (documents du site)\\ }
+\section*{ Les nœuds du graphe (documents du site)\\ }
+\addcontentsline{toc}{section}{Les nœuds du graphe}
 A chaque document du site, on fait correspondre un nœud N dans le graphe associé.
 Par exemple, si on s'intéresse au document a.html décrit dans le chapitre précédant, on peux construire intuitivement un tuple contenant les informations essentielles au bon fonctionnement du site:
 \begin{itemize}
@@ -109,8 +113,13 @@ Dans le cas général, on défini un nœud N du graphe comme suit: N = <u, lab, 
  
 \section{ Les liens entre documents\\ }
 Une fois au point sur les annotations relatives à un nœud (un document) du site, on peut s'intéresser à l'expression des liens.\\
+On va d'abord définir une notation plus précise pour les documents du site. En reprenant notre exemple, on appel a la page a.html. Cette page est entierement défini au sein du web par la fonction: a = doc("http", "monsite.com", "a.html")\\
 Soit un document $s = doc(m,h,u)$ qui pointe vers un autre document $d = doc(m,h,p)$ du site:\\
-\includegraphics[scale=0.6]{lienSimple.png}\\
+
+\begin{figure}[position]
+   \includegraphics[scale=0.6]{lienSimple.png}
+   \caption{\label{étiquette} Lien de s vers d}
+\end{figure}
 Un tel lien est représenté par un tuple <p, l, t>. Si le document s contient le lien html suivant:\\
 <a href="/ulebcup/home/news"> News </a>\\
 notre tuple devient: <p, l, t> = <"/ulebcup/home/news","", $\_$self> $\in$ site\\
@@ -126,25 +135,36 @@ On peut maintenant construire le graph associé au site en suivant les définiti
 \addcontentsline{toc}{chapter}{Vérification des propriétés du site}
 
 \paragraph*{}
-Une fois notre site correctement modélisé, on cherche à lui appliquer une logique de vérification afin de déterminer la présence ou l’absence de certaines propriétés. C'est le $model\ checking$.\\
+Une fois notre site correctement modélisé, on cherche à lui appliquer une logique de vérification afin de déterminer la présence ou l’absence de certaines propriétés.\\
 
 \section*{La logique utilisée}
-On utilise la logique LTL (Linear Temporal Logic).
-Appliqué à une structure de Kripke
+\addcontentsline{toc}{section}{La logique utilisée}
+On utilise la logique LTL (Linear Temporal Logic).\\
+$\varphi ::= p \mid (\neg \varphi) \mid \varphi \wedge \varphi \mid \varphi U \varphi \mid G \varphi \mid X \varphi$\\
+On a besoin d'utiliser les opérateurs temporels (untile, globaly et next) afin de représenter le parcours du site (ou plutôt du graph associé). Au temps t, on se trouve sur une page, et on peut accéder à d'autres pages au temps t+1.\\
+
+Appliqué à une structure de Kripke (qu'on peut voir comme un graphe orienté).\\
+On décrit ici une structure de Kripke M = ($ S, S_0, T, L $).
+\begin{itemize}
+\item S est l'ensemble des états.
+\item T $ \subseteq S \times S $ est la relation de transition entre les états.
+\item $S_0 \subseteq$ S est l'ensemble des états initiaux.
+\item L : S $ \rightarrow F(AP)$ est une fonction qui détermine l'ensemble des propositions vérifiées dans un état.
+\end{itemize}
+NB: On a utilisé AP, l'ensemble des propositions atomique.\\
+
+
 
 \section*{Vérification des propriétés sémantiques}
+\addcontentsline{toc}{section}{Vérification des propriétés sémantiques}
+On cherche à vérifier qu'une formule $ \varphi $ vérifie notre structure M. Cette vérification ($ M\models \varphi $) est définie en $page 9$.
 
-
-
-
-
-La vérification sera basée sur la logique LTL et appliquée à des structures de Kripke, comme défini en $page$ $9$.\\
 \subsection*{ L'utilisation de la sémantique }
-On s'appuie sur la sémantique des pages, de sorte que chaque élément de l'ensemble $Sem \mid_2$ peut être vu comme une propriété atomique. On peut par exemple écrire une formule qui vérifie que les pages privées ne sont pas accessibles directement depuis les pages publiques. On résonne sur $Sem$ = <"scope": \{public, private, access\}>: $\neg(public U private)$. En effet, on doit vérifier la propriété access avant de pouvoir vérifier private.\\
+On s'appuie sur la sémantique des pages, de sorte que chaque élément de l'ensemble $Sem \mid_2$ peut être vu comme une propriété atomique. On peut par exemple écrire une formule qui vérifie que les pages privées ne sont pas accessibles directement depuis les pages publiques. On résonne sur $Sem$ = <"scope": \{public, private, access\}>: $\neg(public U private)$.\\
 
 
-\chapter*{ Extensions souhaitables: }
-
+\chapter*{ Extensions souhaitables }
+\addcontentsline{toc}{chapter}{Extensions souhaitables}
 \begin{itemize}
 \item au niveau du langage (pas seulement html)
 \item au niveau de la quantification du temps en LTL
